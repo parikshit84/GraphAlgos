@@ -1,0 +1,100 @@
+/*
+* Graph Coloring algorithm
+
+* Input-Parameters:
+*	G:		arbitrary graph.
+* 
+* Returns: Number of colors used
+*
+*/
+procedure pcolorfe(G: graph, NN: nodeProp<int >(G)  ; 
+                color: nodeProp<double>, randwt: nodeProp<long>) : int
+                //pred: nodeProp<nodeSet (G)> , succ: nodeProp<nodeSet (G)> ) : int
+{
+     int nodecount=count(n:G.nodes);
+     int assigned=0;
+     //nodeSet(G) U;
+     //nodeSet(G) I;
+     
+     nodeProperty<nodeSet(G)>(G) pred;
+     nodeProperty<nodeSet(G)>(G) succ;
+     nodeProperty<int> counter;
+
+    
+   foreach(x: G.nodes){
+       x.color=-1; 
+       x.randwt=rand(nodecount*100);
+   }
+
+   foreach(v: G.nodes){
+      nodeSet(G) p;
+      nodeSet(G) s; 
+      foreach(u:v.nbrs){
+         if ( (u.degree()>v.degree()) ||  ( (u.degree()==v.degree())&& (u.randwt>v.randwt) )     )  {
+            p.add(u);
+         }
+         else {
+            s.add(u);
+         }
+      }
+      v.pred=p;
+      v.succ=s;
+      //v.counter=p.size();
+      
+   }
+   
+  while(assigned<nodecount){ 
+   //nodeSet(G) I;
+   foreach(v: G.nodes)(v.pred.size()==0 && v.color==-1){
+          map<int , int> S;
+          foreach(n:v.nbrs){
+              int nbr_color=n.color;
+              S[nbr_color]++;
+          }
+          
+          //find the lowest unused color 
+          int c=0;  
+          while(S.hasKey(c)){
+            c++;
+          }    
+          v.color=c;
+          //I.add(v);
+          assigned++;
+          
+          nodeSet(G) SS=v.succ; 
+          
+          foreach(u:SS.items){
+             nodeSet(G) PP=u.pred;   
+             PP.remove(v);
+             u.pred=PP;   
+          }
+   
+   
+   }
+   
+   
+  } 
+   
+//====================Determine the number of colors used==================
+   map<int , int> map2; 
+   foreach(y:G.nodes){
+       int node_color;
+       node_color=y.color;
+       map2[node_color]++;
+    }
+    
+    int maxcolor=0;  
+    while(map2.hasKey(maxcolor)){
+            maxcolor++;
+    }
+    
+    
+    return maxcolor;   
+  
+ }  
+
+
+
+
+
+

@@ -1,0 +1,13 @@
+{
+  "uri": "delta2.adj", 
+  "format": "adj_list",
+  "node_props": [{ 
+    "name": "nodename", 
+    "type": "integer" 
+  }],
+  "edge_props":[{
+        "name":"edgeweight",
+        "type":"integer"
+  }],
+  "separator": " "
+}

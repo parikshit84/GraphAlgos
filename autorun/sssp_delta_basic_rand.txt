@@ -1,0 +1,15 @@
+session
+p=session.compileProgram("/var/services/homes/parbhattacha/graph/gm/sssp_delta.gm")
+g=session.readGraphWithProperties("/var/services/homes/parbhattacha/graph/graph_files/delta_rand.json")
+nn = g.getVertexProperty("nodename")
+wt = g.getEdgeProperty("edgeweight")
+tent = g.createVertexProperty(PropertyType.LONG)
+bid = g.createVertexProperty(PropertyType.LONG)
+p.run(g,nn,wt,0,tent,bid)
+p.run(g,nn,wt,0,tent,bid)
+p.run(g,nn,wt,0,tent,bid)
+p.run(g,nn,wt,0,tent,bid)
+p.run(g,nn,wt,0,tent,bid)
+tent.getTopKValues(9)
+bid.getTopKValues(9)
+exit

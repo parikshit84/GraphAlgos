@@ -1,0 +1,13 @@
+session
+p=session.compileProgram("/var/services/homes/parbhattacha/graph/gm/gcolor_parallel_1.gm")
+g=session.readGraphWithProperties("/var/services/homes/parbhattacha/graph/graph_files/slash.json")
+ug=g.undirect()
+n = ug.getVertexProperty("nodename")
+n2 = ug.createVertexProperty(PropertyType.DOUBLE)
+n3 = ug.createVertexProperty(PropertyType.LONG)
+p.run(ug,n,n2,n3)
+p.run(ug,n,n2,n3)
+p.run(ug,n,n2,n3)
+p.run(ug,n,n2,n3)
+p.run(ug,n,n2,n3)
+exit

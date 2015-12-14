@@ -1,0 +1,58 @@
+/*
+* Graph Coloring algorithm
+
+* Input-Parameters:
+*	G:		arbitrary graph.
+* 
+* Returns: Number of colors used
+*
+*/
+procedure gcolor(G: graph, NN: nodeProp<int >(G)  ; 
+                color: nodeProp<double>) : int
+{
+
+     int init=0;
+        
+   foreach(t: G.nodes){
+       t.color = -1  ;  //assign a color of -1 to signify that no color has been assigned yet
+   }  
+
+
+ 
+   foreach(t:G.nodes){
+       
+       map<int , int> map1;
+       
+       foreach(n:t.nbrs){
+          int nbr_color=n.color;
+          
+          if (nbr_color>-1){
+             map1[nbr_color]++;
+             //add an entry to the map if a color is used up by a neighbor
+          }   
+        }
+        
+        int c=0;  
+        while(map1.hasKey(c)){
+            c++;
+        }    
+        t.color=c;
+   }
+ 
+ 
+ //====================Determine the number of colors used==================
+   map<int , int> map2; 
+   foreach(u:G.nodes){
+       int node_color=u.color;
+       map2[node_color]++;
+    }
+    
+    return map2.size();
+    
+ }  
+
+
+
+
+
+

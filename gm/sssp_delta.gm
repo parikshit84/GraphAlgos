@@ -1,0 +1,116 @@
+/*
+* Delta-stepping shortest path algorithm
+
+* Input-Parameters:
+*	G:		arbitrary graph.
+* 
+* Returns: No. of nodes 
+*
+*/
+procedure deltasp(G: graph, NN: nodeProp<int >(G),wt:edgeProp<int>(G),sourceid:int ; 
+                   tent: nodeProp<long>,bucket_id: nodeProp<long>) : int
+               
+{
+     int delta=10; 
+     //nodeProperty<int>(G) bucket_id;
+     //edgeProperty<int>(G) wt;
+     nodeSet(G) curr_bucket,curr_bucket_new,R;
+     edgeSet(G) heavy,light;
+     map<int , int> bmap;
+      
+     //Initialise tentative distance property of all vertices
+     foreach(v:G.nodes){
+        v.tent=+INF;
+        v.bucket_id = -1;    //no bucket assigned
+        if (v.NN==sourceid){
+           v.tent=0;                    //insert source node with tentative distance 0
+           v.bucket_id=0;               //assign source node to bucket 0
+           bmap[0]++;
+           curr_bucket.add(v);          //add node id 0 to the curr_bucket nodeset
+        }   
+     }
+     
+ 
+     
+     //classify edges as heavy or light
+     
+     foreach (e:G.edges){
+        //e.wt=1;
+        if(e.wt>delta){ 
+            heavy.add(e);
+        } else{ 
+            light.add(e);
+        }    
+     }
+     
+     int curr_bucket_id=0;
+     
+ while(bmap.getMaxValue()>0){          //some queued nodes left
+      
+     foreach(n:G.nodes)(n.bucket_id==curr_bucket_id) 
+           curr_bucket.add(n);
+      
+     R.clear();   //nodeset of nodes deleted in current iteration
+      
+     while(curr_bucket.size()>0){
+            R.addAll(curr_bucket);   //R:=R U B[i]
+            foreach(v:curr_bucket.items){ 
+               foreach(e:v.outEdges)(light.has(e)){     //relax light edges for nodes in current bucket
+                  node(G) tonode= e.toNode();  
+                  if(v.tent + e.wt < tonode.tent){
+                        tonode.tent = v.tent + e.wt;     //do relaxation
+                        int old_bucket_id = tonode.bucket_id;
+                        int new_bucket_id = tonode.tent / delta;
+                        if (old_bucket_id > -1 && bmap.hasKey(old_bucket_id) )
+                           bmap[old_bucket_id]--;          //decrement count of the old bucket ID
+                        tonode.bucket_id = new_bucket_id;
+                        bmap[new_bucket_id]++;           //increment count of the new bucket ID
+                        if (new_bucket_id==curr_bucket_id) 
+                            curr_bucket_new.add(tonode);
+                   }
+               }
+               bmap[curr_bucket_id]--;      //decrement count of current bucket id because this node is now processed. 
+            }
+            curr_bucket.clear();  //B[i]:=0
+            curr_bucket.addAll(curr_bucket_new);  //Nodes that re-entered B[i] 
+            curr_bucket_new.clear();
+     }
+      
+     //relax heavy edges emanating from nodes that were processsed above in the current bucket
+         
+     foreach(t:R.items){
+         foreach (e:t.outEdges)(heavy.has(e)){
+              node(G) tonode=e.toNode(); 
+              if (t.tent + e.wt < tonode.tent){
+                  tonode.tent = t.tent + e.wt;
+                  int old_bucket_id = tonode.bucket_id;
+                  int new_bucket_id = tonode.tent / delta;
+                  if (old_bucket_id > -1 && bmap.hasKey(old_bucket_id) )
+                     bmap[old_bucket_id]--;          //decrement count of the old bucket ID
+                  tonode.bucket_id = new_bucket_id;
+                  bmap[new_bucket_id]++;           //increment count of the new bucket ID
+              }
+         }
+     } 
+         
+     curr_bucket_id++;
+ }
+
+int untouched_nodes=0;   
+      foreach(v:G.nodes)(v.bucket_id==-1) {
+           untouched_nodes++;
+     }
+
+ 
+ 
+ 
+   
+    return untouched_nodes;    
+    //return retval; 
+ }  
+
+
+
+
+
+

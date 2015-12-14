@@ -1,0 +1,9 @@
+{
+  "uri": "as-skitter.txt.changed", 
+  "format": "adj_list",
+  "separator": "	",
+  "node_props":[{
+        "name":"nodename",
+        "type":"integer"
+    }]
+}

@@ -1,0 +1,9 @@
+{
+  "uri": "new_gnutella08.adj", 
+  "format": "adj_list",
+  "node_props": [{ 
+    "name": "nodename", 
+    "type": "integer" 
+  }],
+  "separator": " "
+}

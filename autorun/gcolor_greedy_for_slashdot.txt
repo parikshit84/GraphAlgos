@@ -1,0 +1,13 @@
+session
+p=session.compileProgram("/var/services/homes/parbhattacha/graph/gm/gcolor_greedy_for.gm")
+g=session.readGraphWithProperties("/var/services/homes/parbhattacha/graph/graph_files/slash.json")
+ug = g.undirect()
+nn = ug.getVertexProperty("nodename")
+color = ug.createVertexProperty(PropertyType.DOUBLE)
+p.run(ug,nn,color)
+p.run(ug,nn,color)
+p.run(ug,nn,color)
+p.run(ug,nn,color)
+p.run(ug,nn,color)
+color.getTopKValues(20)
+exit

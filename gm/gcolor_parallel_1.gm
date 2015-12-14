@@ -1,0 +1,96 @@
+/*
+* Graph Coloring algorithm
+
+* Input-Parameters:
+*	G:		arbitrary graph.
+* 
+* Returns: Number of communities detected
+*
+*/
+procedure pcolorfe(G: graph, NN: nodeProp<int >(G)  ; 
+                color: nodeProp<double>, randwt: nodeProp<long>) : int
+{
+     int nodecount=count(n:G.nodes);
+     nodeSet(G) U;
+     nodeSet(G) I;
+
+        
+   foreach(x: G.nodes){
+       x.color=-1; 
+       x.randwt=rand(nodecount*100);
+       U.add(x);    //U:=V
+   }
+   
+while(U.size()>0){ 
+   foreach(v: U.items){
+       int flag=0;       
+       
+
+       foreach(w:v.nbrs){
+           
+          if (   (  U.has(w)                                                     )   && 
+                 ( (w.degree()>v.degree()) ||  ( (w.degree()==v.degree())&&(w.randwt>v.randwt) )     )    ){
+             flag++;
+             //node has a neighbor with unassigned color and higher degree
+          }   
+            
+       }
+       
+       //select node that was unaffected by the flag increments above
+       
+       if (flag==0){
+          I.add(v);
+       }
+    }
+
+    foreach(vp:I.items){
+          map<int , int> S;
+          foreach(n:vp.nbrs){
+              int nbr_color=n.color;
+              S[nbr_color]++;
+          }
+          
+          //find the lowest unused color 
+          int c=0;  
+          while(S.hasKey(c)){
+            c++;
+          }    
+          vp.color=c;
+       
+    }
+   
+   
+   U.removeAll(I);
+   I.clear();
+   
+}  
+   
+    
+    
+ //====================Determine the number of colors used==================
+   map<int , int> map2; 
+   foreach(y:G.nodes){
+       int node_color;
+       node_color=y.color;
+       map2[node_color]++;
+    }
+    
+    int maxcolor=0;  
+    while(map2.hasKey(maxcolor)){
+            maxcolor++;
+    }
+    
+    
+    return maxcolor;
+    //return iter;
+    //return 1+U.size();   //return value of 0 isn't displayed !!    
+
+  
+  
+ }  
+
+
+
+
+
+

@@ -1,0 +1,9 @@
+{
+  "uri": "new_synthetic.adj", 
+  "format": "adj_list",
+  "node_props": [{ 
+    "name": "nodename", 
+    "type": "integer" 
+  }],
+  "separator": " "
+}
