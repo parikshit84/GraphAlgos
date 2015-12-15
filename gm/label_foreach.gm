@@ -1,0 +1,128 @@
+/*
+* Label propagation algorithm
+
+* Input-Parameters:
+*	G:		arbitrary graph.
+* 
+* Returns: Number of communities detected
+*
+*/
+procedure label(G: graph, NN: nodeProp<int >(G)  ; 
+                currlabel: nodeProp<double>) : int
+{
+
+   //setDefaultTimeLiteralFormat("yyyy.MM.dd hh:mm:ss") ;
+   //time t1=currentTime();
+
+   //node(G) m;
+   int i=0;
+   //int j=0;
+   int newj;
+   int c;
+   //int k;
+   //int b;
+   
+   int new_label;
+   int curr_label;
+   int upd_count1,upd_count2;
+   
+   int max_iter_count = 1000;
+   int cnt=0;
+   int chosen=0;
+   
+//   map<int , int> map1;
+
+//  time t1=currentTime();
+
+nodeProp<int>(G) plabel;
+nodeProp<int>(G) pplabel;
+nodeProp<int>(G) nlabel;
+
+
+
+
+   
+//Assign unique labels to each node   
+   foreach(t: G.nodes)
+   {
+      t.currlabel = t.NN  ;  //NN is the name of the node
+      t.plabel=-1;
+      t.pplabel=-1;
+      t.nlabel=t.currlabel;
+//      i++;
+    }  
+ 
+ 
+ do{  
+    upd_count1=0;
+    upd_count2=0;
+     
+    foreach(t: G.nodes)
+   {  
+      map<int , int> map1;
+      foreach(u: t.nbrs)
+      {
+         int j;
+         j=u.currlabel;  //j stores the neighbor's label
+         map1[j]++; 
+       }
+       
+       //get the label with the highest frequency
+      
+      map<int , int> cont_map; 
+      foreach(a:t.nbrs){
+         int b;
+         b=a.currlabel;
+         //newb=b+(t.NN*5000);
+         if (map1.hasMaxValue(b)){
+            cont_map[b]=b;   //Add label b to contenders' list with value=label 
+         }       
+      } 
+      
+      
+      if (cont_map.size() >0){
+          t.nlabel=cont_map.getMaxKey();
+      }    
+    }     //for ends
+    
+    foreach(v: G.nodes){
+       v.pplabel=v.plabel;
+       v.plabel=v.currlabel;
+       v.currlabel=v.nlabel;
+       
+       if (v.currlabel != v.plabel)
+          upd_count1++;
+       if (v.currlabel != v.pplabel)
+          upd_count2++;
+       
+    }   
+    
+    
+    
+    cnt++;   
+ } while (  (upd_count1>0) && (upd_count2>0)  );
+
+ //(cnt <= max_iter_count)&&
+ 
+ //find number of communities detected
+   
+   map<int , int> map2;
+   foreach(w: G.nodes)
+   {  
+      int k;
+      k=w.currlabel;
+      map2[k]++;
+      
+      //map2[w.currlabel]++;
+       
+   }    
+    
+    return map2.size();
+    
+ }  
+
+
+
+
+
+
